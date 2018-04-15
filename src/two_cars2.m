@@ -1,26 +1,27 @@
 clear all
-alpha = 1; beta = 1;
-v_max = 15; h_stop = 5; h_go = 25;
+alpha1 = 1; beta1 = 1;
+alpha2 = 10; beta2 = 1;
+v_max = 25; h_stop = 5; h_go = 10;
 
 A = [
 0,      -1,               1;
-0, -(alpha + beta),     beta;
-0,      beta,       -(alpha + beta)];
+0, -(alpha1 + beta1),     beta1;
+0,      beta2,       -(alpha2 + beta2)];
 
 B = [
 0 ,0;
-1, 0;
-0, 1
+beta1, 0;
+0, beta2
 ];
 
 C = [1, 0, 0];
 
 D = [0, 0];
 
-X = [10, 0, 0]';
+X = [27, 30, 75]';
 
 t=0;%simulation starting time
-dt=0.01;%step size
+dt=0.001;%step size
 tsim=50.0;%finish time
 n=round( (tsim-t)/dt); %no. of iterations
 
@@ -41,11 +42,12 @@ subplot(2,1,1)
 plot(X1(:,1),X1(:,2:3) )
 % axis([0 10 -10 10])
 xlabel('time')
-ylabel('state variables')
-title('Response of state variables')
+ylabel('Position of vehicles')
+title('Response of vehicles')
+legend;
 subplot(2,1,2)
 plot(Y1(:,1),Y1(:,2) );
 % axis([0 10 -10 10])
 xlabel('time')
-ylabel('output variable')
-title('Response of output variable')
+ylabel('Headway')
+title('Response of headway')
