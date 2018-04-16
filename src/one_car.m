@@ -1,5 +1,5 @@
 % Example usage
-Plot the range policy
+% Plot the range policy
 
 alpha = 1; beta = 1;
 v_max = 15; h_stop = 5; h_go = 25;
