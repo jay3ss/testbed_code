@@ -1,6 +1,6 @@
 clear all; close all;
 
-v_max = 35; h_stop = 5; h_go = 30;
+v_max = 35; h_stop = 5; h_go = 15;
 
 alpha1 = 0.6; beta1 = 0.9;
 alpha2 = 0.6; beta2 = 0.9;
@@ -46,8 +46,8 @@ tsim=50.0;%finish time
 n=round((tsim-t)/dt); %no. of iterations
 
 % Set the initial conditions
-%    h1,  v1, h2, v2, h3, v3, h4, v4, h5, v5
-X = [400, 50, 400, 50, 40, 20, 40, 20, 250, 30]';
+%    h1,  v1, h2,  v2, h3, v3, h4, v4, h5,  v5
+X = [40, 50, 40, 50, 40, 20, 40, 20, 25, 20]';
 
 for i=1:n;
   % Find the headways
@@ -56,6 +56,11 @@ for i=1:n;
   h3 = X(4) - X(6);
   h4 = X(6) - X(8);
   h5 = X(8) - X(10);
+  % h1 = validate_headway(X(10) - X(2), h_stop);
+  % h2 = validate_headway(X(2) - X(4), h_stop);
+  % h3 = validate_headway(X(4) - X(6), h_stop);
+  % h4 = validate_headway(X(6) - X(8), h_stop);
+  % h5 = validate_headway(X(8) - X(10), h_stop);
   u1 = range_policy(h1, h_stop, h_go, v_max);
   u2 = range_policy(h2, h_stop, h_go, v_max);
   u3 = range_policy(h3, h_stop, h_go, v_max);
