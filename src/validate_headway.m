@@ -1,6 +1,8 @@
-function validated_headway = validate_headway(headway, lower_limit)
+function [headway_val, vel_val] = validate_headway(headway, prev_headway, lower_limit, vel, dt)
   if headway < lower_limit
-    validated_headway = lower_limit;
+    headway_val = lower_limit;
+    vel_val = (prev_headway - lower_limit)/dt;
   else
-    validated_headway = headway;
+    headway_val = headway;
+    vel_val = vel;
 end
