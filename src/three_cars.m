@@ -41,23 +41,18 @@ X = [40, 10, 20, 0, 20, 0]';
 
 t=0;%simulation starting time
 dt=0.01;%step size
-tsim=50.0;%finish time
+tsim=500.0;%finish time
 n=round((tsim-t)/dt); %no. of iterations
+
+% During each iteration, solve the system and make sure that 
+% the cars don't go through each other
+
 
 for i=1:n;
   u1 = range_policy(X(1), h_stop, h_go, v_max);
   u2 = range_policy(X(2), h_stop, h_go, v_max);
   u3 = range_policy(X(3), h_stop, h_go, v_max);
 
-  % if u1 > u_max
-  %    u1 = u_max;
-  % end
-  % if u2 > u_max
-  %    u2 = u_max;
-  % end
-  % if u3 > u_max
-  %    u3 = u_max;
-  % end
   U = [u1; u2; u3];
   % u=4;%fixed input
   dx=A*X+B*U;
