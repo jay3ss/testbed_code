@@ -1,5 +1,5 @@
 % Defines an intelligent driver model (IDM) according to M. Treiber and A.
-% Kesting. Much of this has been borrowed from /inspired by
+% Kesting. Much of this has been borrowed from/inspired by
 % https://github.com/movsim/traffic-simulation-de
 
 classdef IntelligentDriverModel < handle
