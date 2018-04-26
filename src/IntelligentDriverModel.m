@@ -56,9 +56,9 @@ classdef IntelligentDriverModel < handle
       %
       % @return:  accel [m/s^2]
 
-      v0_eff = determineValidLocalV0();
-      acc_free = calcAccFree(v, v0_eff);
-      acc_int = calcAccInt(v, vl);
+      v0_eff = obj.determineValidLocalV0();
+      acc_free = obj.calcAccFree(v, v0_eff);
+      acc_int = obj.calcAccInt(v, vl);
       accel = 0.0;
 
       if (v0_eff < 0.00001)
@@ -84,7 +84,7 @@ classdef IntelligentDriverModel < handle
     end % calcAccFree
 
     function acc_int = calcAccInt(obj, v, vl, s)
-      s_star = calcSStar(v, vl);
+      s_star = obj.calcSStar(v, vl);
       acc_int = -obj.a_*(s_star/max(s,obj.s0_))^2;
     end % calcAccInt
 
