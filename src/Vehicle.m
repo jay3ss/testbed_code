@@ -12,6 +12,7 @@ classdef Vehicle < handle
     length
     u
     speed
+    id
   end
 
   methods
@@ -24,6 +25,7 @@ classdef Vehicle < handle
       % obj.length = vel_length;
       % obj.u = u;
       % obj.speed = speed;
+      % obj.id = floor(100000*rand()+200)
     end
 
     function set.u(obj, u)
@@ -41,13 +43,21 @@ classdef Vehicle < handle
     function speed = get.speed(obj)
         speed = obj.speed;
     end
-    
+
     function set.length(obj, l)
       obj.length = l;
     end
 
     function l = get.length(obj)
       l = obj.length;
+    end
+
+    function set.id(obj, n)
+      obj.id = n;
+    end
+
+    function n = get.length(obj)
+      n = obj.id;
     end
   end
   methods (Access=private)
