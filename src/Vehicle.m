@@ -70,6 +70,14 @@ classdef Vehicle < handle
     function n = get.id(obj)
       n = obj.id;
     end
+
+    function set.lead_id(obj, n)
+      obj.lead_id = n;
+    end
+
+    function n = get.lead_id(obj)
+      n = obj.lead_id;
+    end
   end
   methods (Access=private)
   end
