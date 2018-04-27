@@ -14,7 +14,7 @@ classdef Road < handle
   % @param traj_y_:         function arc length u -> phys y coordinate (North)
   % @param speed_init_:     initial longitudinal speed [m/s]
   % @param vehicles:       array of vehicles on road
-    
+
     traj_x_
     traj_y_
     speed_init_
@@ -31,15 +31,15 @@ classdef Road < handle
       obj.num_vehicles = floor(obj.road_length * init_density);
       obj.vehicles = obj.createVehicleArray(vehicle, v_def);
     end
-    
+
     function num_vehicles = get.num_vehicles(obj)
       num_vehicles = obj.num_vehicles;
     end
-    
+
     function road_length = get.road_length(obj)
       road_length = obj.road_length;
     end
-    
+
     function vels = get.vehicles(obj)
       vels = obj.vehicles;
     end
@@ -63,6 +63,11 @@ classdef Road < handle
         vehicles(i).u = u;
         vehicles(i).length = vel_len;
         vehicles(i).speed = speed;
+        if i == 1
+          vehicles(i).lead_id =  n_vehicles;
+        else
+          vehicles(i).lead_id = i + 1;
+        end
       end
     end
   end
