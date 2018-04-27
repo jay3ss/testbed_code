@@ -36,11 +36,13 @@ classdef IntelligentDriverModel < handle
       % Constructor
       % Set some "sensible" defaults (taken from traffic-simulation-de) for
       % speedlimit_, speedmax_, bmax_, & alpha_v0_
-      obj.v0_ = v0;
-      obj.T_ = T;
-      obj.s0_ = s0;
-      obj.a_ = a;
-      obj.b_ = b;
+      if nargin == 5
+        obj.v0_ = v0;
+        obj.T_ = T;
+        obj.s0_ = s0;
+        obj.a_ = a;
+        obj.b_ = b;
+      end
       obj.speedlimit_ = 1000;
       obj.speedmax_ = 1000;
       obj.bmax_ = 16;
