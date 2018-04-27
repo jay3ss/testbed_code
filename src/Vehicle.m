@@ -10,20 +10,25 @@ classdef Vehicle < handle
   % length:  length of the vehicle [m]
   % u:       longitudinal coordinate (arc-length) [m]
   % speed:   speed of vehicle [m/s]
+  % id:      id of the vehicle
+  % lead_id: id of the lead vehicle
+  % driver:  model of the driver
     accel
     length
     u
     speed
     id
     lead_id
+    driver
   end
 
   methods
-    function obj = Vehicle(vel_length, u)
-      if nargin == 3
+    function obj = Vehicle(vel_length, u, driver)
+      if nargin == 4
         obj.length = vel_length;
         obj.u = u;
         obj.speed = speed;
+        obj.driver = driver;
       end
       % obj.length = vel_length;
       % obj.u = u;
@@ -77,6 +82,14 @@ classdef Vehicle < handle
 
     function n = get.lead_id(obj)
       n = obj.lead_id;
+    end
+
+    function set.driver(obj, d)
+      obj.driver = d;
+    end
+
+    function d = get.driver(obj)
+      d = obj.driver;
     end
   end
   methods (Access=private)
