@@ -20,16 +20,19 @@ classdef Road < handle
     speed_init_
   end
   methods
-    function obj = Road(road_length, init_density, vehicle, v_param)
+    function obj = Road(road_length, init_density, vehicle, v_param, driver, d_param)
       % Constructor
       % @param road_length = length of the road
       % @param init_density = intial density of the road [vehicle/m]
       % @param vehicle: vehicle object
       % @param v_param:   container.Map that contains init_speed and length
       % keys
+      % @param driver: driver object
+      % @param d_param: container.Map that contains the parameters about the
+      % driver
       obj.road_length = road_length;
       obj.num_vehicles = floor(obj.road_length * init_density);
-      obj.vehicles = obj.createVehicleArray(vehicle, v_param);
+      obj.vehicles = obj.createVehicleArray(vehicle, v_param, driver, d_param);
     end
 
     function accels = calcAccelerations(obj)
@@ -38,19 +41,12 @@ classdef Road < handle
         lead_id = this_vehicle.lead_id;
         lead_vehicle = obj.vehicles(lead_id);
         s = lead_vehicle.u - lead_vehicle.length - this_vehicle.u;
+        s = s  + obj.road_length;
         speed = this_vehicle.speed;
         lead_speed = lead_vehicle.speed;
         lead_accel = lead_vehicle.accel;
 
-        if (lead_id >= i)
-          s = s + obj.road_length;
-        else
-          % why?
-          % s = 10000; for virtual vehicle, which we don't have...
-          lead_accel = 0;
-        end
-
-        this_vehicle.calcAccel
+        this_vehicle.driver.calcAccel(s, speed, lead_speed, lead_accel)
       end
     end
 
@@ -70,8 +66,7 @@ classdef Road < handle
     function [vehicles] = createVehicleArray(obj, vehicle, v_param)
       % Creates an array of homogeneous vehicles
       % @param vehicle: vehicle object
-      % @param v_param:   container.Map that contains init_speed and length
-      % keys
+      % @param v_param:   container.Map that contains init_speed and length keys
       % @returns vehicles: array of homogeneous vehicles
       speed = 0.8 * v_param('init_speed');
       vel_len = v_param('length');
