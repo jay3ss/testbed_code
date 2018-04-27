@@ -20,16 +20,38 @@ classdef Road < handle
     speed_init_
   end
   methods
-    function obj = Road(road_length, init_density, vehicle, v_def)
+    function obj = Road(road_length, init_density, vehicle, v_param)
       % Constructor
       % @param road_length = length of the road
       % @param init_density = intial density of the road [vehicle/m]
       % @param vehicle: vehicle object
-      % @param v_def:   container.Map that contains init_speed and length
+      % @param v_param:   container.Map that contains init_speed and length
       % keys
       obj.road_length = road_length;
       obj.num_vehicles = floor(obj.road_length * init_density);
-      obj.vehicles = obj.createVehicleArray(vehicle, v_def);
+      obj.vehicles = obj.createVehicleArray(vehicle, v_param);
+    end
+
+    function accels = calcAccelerations(obj)
+      for i = 1:obj.num_vehicles
+        this_vehicle = obj.vehicles(i);
+        lead_id = this_vehicle.lead_id;
+        lead_vehicle = obj.vehicles(lead_id);
+        s = lead_vehicle.u - lead_vehicle.length - this_vehicle.u;
+        speed = this_vehicle.speed;
+        lead_speed = lead_vehicle.speed;
+        lead_accel = lead_vehicle.accel;
+
+        if (lead_id >= i)
+          s = s + obj.road_length;
+        else
+          % why?
+          % s = 10000; for virtual vehicle, which we don't have...
+          lead_accel = 0;
+        end
+
+        this_vehicle.calcAccel
+      end
     end
 
     function num_vehicles = get.num_vehicles(obj)
@@ -45,14 +67,14 @@ classdef Road < handle
     end
   end
   methods (Access=private)
-    function [vehicles] = createVehicleArray(obj, vehicle, v_def)
+    function [vehicles] = createVehicleArray(obj, vehicle, v_param)
       % Creates an array of homogeneous vehicles
       % @param vehicle: vehicle object
-      % @param v_def:   container.Map that contains init_speed and length
+      % @param v_param:   container.Map that contains init_speed and length
       % keys
       % @returns vehicles: array of homogeneous vehicles
-      speed = 0.8 * v_def('init_speed');
-      vel_len = v_def('length');
+      speed = 0.8 * v_param('init_speed');
+      vel_len = v_param('length');
       n_vehicles = obj.num_vehicles;
       vehicles(1, n_vehicles) = vehicle;
       % obj.vehicles(1, num_vehicles) = Vehicle(vel_length);
