@@ -6,25 +6,23 @@ classdef IntelligentDriverModel < handle
 % basis model for the longitudinal dynamics, i.e., accelerations and braking
 % decelerations of the drivers
   properties (Access=public)
-
+  % v0: desired speed [m/s]
+  % T: desired time gap [s]
+  % s0: minimum gap [m]
+  % a: maximum acceleration [m/s^2]
+  % b: maximum deceleration [m/s^2]
+    v0
+    T
+    s0
+    a
+    b
   end
 
   properties (Access=private)
-  % v0: desired speed [m/s]
-  % T_: desired time gap [s]
-  % s0_: minimum gap [m]
-  % a_: maximum acceleration [m/s^2]
-  % b_: maximum deceleration [m/s^2]
   % speedlimit_
   % speedmax_
   % bmax_
   % alpha_v0_: temporary multiplier
-
-    v0_
-    T_
-    s0_
-    a_
-    b_
     speedlimit_
     speedmax_
     bmax_
