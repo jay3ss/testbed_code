@@ -22,29 +22,29 @@ classdef IntelligentDriverModel < handle
   % speedlimit_
   % speedmax_
   % bmax_
-  % alpha_v0_: temporary multiplier
+  % alpha_v0: temporary multiplier
     speedlimit_
     speedmax_
     bmax_
-    alpha_v0_
+    alpha_v0
   end
 
-  methods (Access=public)
+  methods
     function obj = IntelligentDriverModel(v0, T, s0, a, b)
       % Constructor
       % Set some "sensible" defaults (taken from traffic-simulation-de) for
-      % speedlimit_, speedmax_, bmax_, & alpha_v0_
+      % speedlimit_, speedmax_, bmax_, & alphav0
       if nargin == 5
-        obj.v0_ = v0;
-        obj.T_ = T;
-        obj.s0_ = s0;
-        obj.a_ = a;
-        obj.b_ = b;
+        obj.v0 = v0;
+        obj.T = T;
+        obj.s0 = s0;
+        obj.a = a;
+        obj.b = b;
       end
       obj.speedlimit_ = 1000;
       obj.speedmax_ = 1000;
       obj.bmax_ = 16;
-      obj.alpha_v0_ = 1;
+      obj.alpha_v0 = 1;
     end
 
     function accel = calcAccel(obj, s, v, vl, al)
@@ -56,40 +56,80 @@ classdef IntelligentDriverModel < handle
       %
       % @return:  accel [m/s^2]
 
-      v0_eff = obj.determineValidLocalV0();
-      acc_free = obj.calcAccFree(v, v0_eff);
-      acc_int = obj.calcAccInt(v, vl);
+      v0eff = obj.determineValidLocalV0();
+      acc_free = obj.calcAccFree(v, v0eff);
+      acc_int = obj.calcAccInt(v, vl, s);
       accel = 0.0;
 
-      if (v0_eff < 0.00001)
+      if (v0eff < 0.00001)
         accel = 0;
       else
         accel = max(-obj.bmax_, acc_free + acc_int);
       end
     end % calcAccel
+
+    function set.v0(obj, v)
+      obj.v0 = v;
+    end
+
+    function v = get.v0(obj)
+      v = obj.v0;
+    end
+
+    function set.T(obj, t)
+      obj.T = t;
+    end
+
+    function t = get.T(obj)
+      t = obj.T;
+    end
+
+    function set.s0(obj, s)
+      obj.s0 = s;
+    end
+
+    function s = get.s0(obj)
+      s = obj.s0;
+    end
+
+    function set.a(obj, aa)
+      obj.a = aa;
+    end
+
+    function aa = get.a(obj)
+      aa = obj.a;
+    end
+
+    function set.b(obj, bb)
+      obj.b = bb;
+    end
+
+    function bb = get.b(obj)
+      bb = obj.b;
+    end
   end % public methods
 
   methods (Access=private)
     function valid_v0 = determineValidLocalV0(obj)
-      valid_v0 = min(obj.v0_, obj.speedlimit_, obj.speedmax_);
-      valid_v0 *= obj.alpha_v0;
+      valid_v0 = min(min(obj.v0, obj.speedlimit_), obj.speedmax_);
+      valid_v0 = valid_v0 * obj.alpha_v0;
     end % determineValidLocalV0
 
-    function acc_free = calcAccFree(obj, v, v0_eff)
-      if (obj.v_ < v0_eff)
-        acc_free = obj.a_*(1-(v/v0eff)^4));
+    function acc_free = calcAccFree(obj, v, v0eff)
+      if (v < v0eff)
+        acc_free = obj.a*(1-(v/v0eff)^4);
       else
-        acc_free = obj.a_*(1-v/v0eff)
+        acc_free = obj.a*(1-v/v0eff);
       end
     end % calcAccFree
 
     function acc_int = calcAccInt(obj, v, vl, s)
       s_star = obj.calcSStar(v, vl);
-      acc_int = -obj.a_*(s_star/max(s,obj.s0_))^2;
+      acc_int = -obj.a*(s_star/max(s,obj.s0))^2;
     end % calcAccInt
 
     function s_star = calcSStar(obj, v, vl)
-      s_star = obj.s0_ + max(0.,v*obj.T_ + 0.5*v*(v - vl)/sqrt(obj.a_*obj.b_));
+      s_star = obj.s0 + max(0.,v*obj.T + 0.5*v*(v - vl)/sqrt(obj.a*obj.b));
     end % calcSStar
   end % private methods
 end % IntelligentDriverModel
