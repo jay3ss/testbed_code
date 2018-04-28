@@ -23,7 +23,7 @@ classdef Vehicle < handle
   end
 
   methods
-    function obj = Vehicle(vel_length, u, driver)
+    function obj = Vehicle(vel_length, u, speed, driver)
       if nargin == 4
         obj.length = vel_length;
         obj.u = u;
