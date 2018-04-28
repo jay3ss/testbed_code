@@ -42,7 +42,9 @@ classdef Road < handle
         lead_id = this_vehicle.lead_id;
         lead_vehicle = obj.vehicles(lead_id);
         s = lead_vehicle.u - lead_vehicle.length - this_vehicle.u;
-        s = s  + obj.road_length;
+        if (lead_id >= i)
+          s = s  + obj.road_length;
+        end
         speed = this_vehicle.speed;
         lead_speed = lead_vehicle.speed;
         lead_accel = lead_vehicle.accel;
@@ -62,12 +64,15 @@ classdef Road < handle
         % vehicle = obj.vehicles(i);
         speed = obj.vehicles(i).speed;
         accel = obj.vehicles(i).accel;
-        % disp('id'); disp(obj.vehicles(i).id);
-        % disp('speed'); disp(obj.vehicles(i).speed);
-        % disp('accel'); disp(obj.vehicles(i).accel);
-        % Positional update with old speed
-        obj.vehicles(i).u = obj.vehicles(i).u + max(0, speed*dt + 0.5*accel*dt^2) - road_len;
-        % disp('u'); disp(obj.vehicles(i).u)
+        u = obj.vehicles(i).u;
+
+        obj.vehicles(i).u = u + max(0, speed*dt + 0.5*accel*dt*dt);
+
+        % this is a circular road so we need to make sure that the current
+        % vehicle doesn't go beyond it
+        if (obj.vehicles(i). u > road_len)
+          obj.vehicles(i).u = obj.vehicles(i).u - road_len;
+        end
 
         % Update the speed
         obj.vehicles(i).speed = max(speed + accel*dt, 0);
@@ -108,9 +113,9 @@ classdef Road < handle
       driver.v0 = d_param('v0');
       % obj.vehicles(1, num_vehicles) = Vehicle(vel_length);
 
-      for i = 1:n_vehicles % counting backwards for Memory pre-allocation
+      for i = 1:n_vehicles
         % find the position of the current vehicle
-        u = (n_vehicles-i-1) * obj.road_length/(n_vehicles);
+        u = (n_vehicles-i-1) * obj.road_length / (n_vehicles);
         vehicles(i).u = u;
         vehicles(i).length = vel_len;
         vehicles(i).speed = speed;
