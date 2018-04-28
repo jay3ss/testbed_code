@@ -56,15 +56,39 @@ classdef IntelligentDriverModel < handle
       %
       % @return:  accel [m/s^2]
 
-      v0eff = obj.determineValidLocalV0();
-      acc_free = obj.calcAccFree(v, v0eff);
-      acc_int = obj.calcAccInt(v, vl, s);
-      accel = 0.0;
+      % v0eff = obj.determineValidLocalV0();
+      % acc_free = obj.calcAccFree(v, v0eff);
+      % acc_int = obj.calcAccInt(v, vl);
+      % accel = 0.0;
+      %
+      % if (v0eff < 0.00001)
+      %   accel = 0;
+      % else
+      %   accel = max(-obj.bmax_, acc_free + acc_int);
+      % end
 
+      noise_acc= 0.3;
+      acc_rnd = noise_acc * (rand() - 0.5);
+
+      v0eff = min(min(obj.v0, obj.speedlimit_), obj.speedmax_);
+      v0eff = v0eff * obj.alpha_v0;
+
+      % actual acceleration model
+      acc_free = 0.0;
+      if (v < v0eff)
+        acc_free = obj.a*(1-(v/v0eff)^4);
+      else
+        acc_free = obj.a*(1-v/v0eff);
+      end
+
+      s_star = obj.s0 + max(0., v * obj.T + 0.5 * v * (v-vl) / sqrt(obj.a * obj.b));
+      acc_int = -obj.a * (s_star / max(s, obj.s0))^2;
+
+      accel = 0;
       if (v0eff < 0.00001)
         accel = 0;
       else
-        accel = max(-obj.bmax_, acc_free + acc_int);
+        accel = max(-obj.bmax_, acc_free + acc_int + acc_rnd);
       end
     end % calcAccel
 
@@ -129,7 +153,10 @@ classdef IntelligentDriverModel < handle
     end % calcAccInt
 
     function s_star = calcSStar(obj, v, vl)
-      s_star = obj.s0 + max(0.,v*obj.T + 0.5*v*(v - vl)/sqrt(obj.a*obj.b));
+      s0 = obj.s0;
+      s_tmp1 = 0.5 * v * (v - vl) / sqrt(obj.a * obj.b);
+      s_tmp2 = max(0, v * obj.T + s_tmp1);
+      s_star = obj.s0 + s_tmp2;
     end % calcSStar
   end % private methods
 end % IntelligentDriverModel
