@@ -49,6 +49,8 @@ classdef IntelligentDriverModel < handle
 
     function accel = calcAccel(obj, s, v, vl, al)
       % Calculates the acceleration for the IDM
+      % dv/dt = a(1 - (v/v0)^4 - (s_star/s)^)
+      % s_star = s0 + v*T + v*del_v/(2*sqrt(a*b))
       % @param s:     actual gap [m]
       % @param v:     actual speed [m/s]
       % @param vl:    leading speed [m/s]
