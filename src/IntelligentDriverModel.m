@@ -69,7 +69,7 @@ classdef IntelligentDriverModel < handle
       %   accel = max(-obj.bmax_, acc_free + acc_int);
       % end
 
-      noise_acc= 0.3;
+      noise_acc = 0.3;
       acc_rnd = noise_acc * (rand() - 0.5);
 
       v0eff = min(min(obj.v0, obj.speedlimit_), obj.speedmax_);
