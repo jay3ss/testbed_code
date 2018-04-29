@@ -2,7 +2,7 @@ clear;
 close all;
 % Vehicle parameters
 road_length = 100; % m
-init_density = 0.3; % vehicle/m
+init_density = 0.1; % vehicle/m
 init_speed = 25; % m/s
 vel_length = 7; % m
 
